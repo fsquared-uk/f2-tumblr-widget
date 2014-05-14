@@ -1,0 +1,40 @@
+/* This stylesheet is used to style the public view of the widget. */
+
+/**
+ * All widget styles are wrapped in widget/widget-area classes to ensure
+ * that they correctly override theme styling.
+ */
+
+.widget-area .widget .f2-tumblr-post,
+.widget .f2-tumblr-post,
+.f2-tumblr-post {
+  margin-bottom: 10px;
+}
+
+.widget-area .widget .f2-tumblr-post h3,
+.widget .f2-tumblr-post h3,
+.f2-tumblr-post h3 {
+  margin-bottom: 5px;
+}
+
+.widget-area .widget .f2-tumblr-post p,
+.widget .f2-tumblr-post p,
+.f2-tumblr-post p {
+  line-height: 135%;
+  margin-bottom: 5px;
+}
+
+.widget-area .widget .f2-tumblr-slideshow,
+.widget .f2-tumblr-slideshow,
+.f2-tumblr-slideshow {
+  position: relative;
+}
+
+.widget-area .widget .f2-tumblr-slideshow .f2-tumblr-post,
+.widget .f2-tumblr-slideshow .f2-tumblr-post,
+.f2-tumblr-slideshow .f2-tumblr-post {
+  display: none;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
