@@ -25,13 +25,59 @@ foreach( $tumblr_xml->posts->post as $the_post ) {
     // The exact processing depends on the post type
     switch( (string)$the_post['type'] ) {
     case 'regular':         // Plain text
-echo "<p>regular</p>";
+        // A nice easy one, this!
+        $post_title = strip_tags( (string)$the_post->{'regular-title'} );
+
+        // Only do any more if content is required
+        if ( 'excerpt' == $local_params['content_type'] ) {
+            $post_body = $this->trim_words(
+                (string)$the_post->{'regular-body'},
+                $local_params['excerpt_size'],
+                '&hellip; <a href="' . $the_post['url'] . '">[more]</a>'
+            );
+        } else if ( 'full' == $local_params['content_type'] ) {
+            $post_body = strip_tags( (string)$the_post->{'regular-body'}, '<p>' );
+        }
         break;
     case 'link':            // Anotated link URL
-echo "<p>link</p>";
+        // The link text will make a good title
+        $post_title = strip_tags( (string)$the_post->{'link-text'} );
+
+        // Only do any more if content is required
+        if ( 'excerpt' == $local_params['content_type'] ) {
+            $post_body = $this->trim_words(
+                (string)$the_post->{'link-description'},
+                $local_params['excerpt_size'],
+                '&hellip; <a href="' . $the_post['url'] . '">[more]</a>'
+            );
+        } else if ( 'full' == $local_params['content_type'] ) {
+            $post_body = strip_tags( (string)$the_post->{'link-description'}, '<p>' );
+        }
         break;
     case 'quote':           // Quoted text
-echo "<p>quote</p>";
+        // Use the (first sentence of) attributed source as a title
+        $post_title = preg_split( 
+            '/[.?!:]/', 
+            strip_tags(
+                preg_replace(
+                    array( '/<a.*?<\/a>/', '/<p>:<\/p>/' ),
+                    '',
+                    (string)$the_post->{'quote-source'}
+                )
+            ), 
+            2
+        )[0];
+
+        // And the quote itself as the body - only do any more is required
+        if ( 'excerpt' == $local_params['content_type'] ) {
+            $post_body = $this->trim_words(
+                (string)$the_post->{'quote-text'},
+                $local_params['excerpt_size'],
+                '&hellip; <a href="' . $the_post['url'] . '">[more]</a>'
+            );
+        } else if ( 'full' == $local_params['content_type'] ) {
+            $post_body = strip_tags( (string)$the_post->{'quote-text'}, '<p>' );
+        }
         break;
     case 'photo':           // Photograph
         // Try and extract some sort of sensible title from the caption
@@ -45,6 +91,19 @@ echo "<p>quote</p>";
 
             // And remove it from the DOM document
             $xres->item(0)->parentNode->removeChild($xres->item(0));
+        } else {
+            // No title found, so pluck out the first sentence instead
+            $post_title = preg_split( 
+                '/[.?!:]/', 
+                strip_tags(
+                    preg_replace(
+                        array( '/<a.*?<\/a>/', '/<p>:<\/p>/' ),
+                        '',
+                        (string)$the_post->{'photo-caption'}
+                    )
+                ), 
+                2
+            )[0];
         }
 
         // Only do any more if content is required
@@ -78,16 +137,117 @@ echo "<p>quote</p>";
         }
         break;
     case 'conversation':    // Chat
-echo "<p>chat</p>";
+        // The title is easy!
+        $post_title = (string)$the_post->{'converstion-title'};
+
+        // And as much of the body as we require
+        if ( 'excerpt' == $local_params['content_type'] ) {
+            $post_body = $this->trim_words(
+                (string)$the_post->{'conversation-text'},
+                $local_params['excerpt_size'],
+                '&hellip; <a href="' . $the_post['url'] . '">[more]</a>'
+            );
+        } else if ( 'full' == $local_params['content_type'] ) {
+            $post_body = strip_tags( (string)$the_post->{'conversation-text'}, '<p>' );
+        }
         break;
     case 'video':           // Video
-echo "<p>video</p>";
+        // Try to finda caption
+        $post_title = preg_split(
+            '/[.?!:]/',
+            strip_tags(
+                preg_replace(
+                    array( '/<a.*?<\/a>/', '/<p>:<\/p>/' ),
+                    '',
+                    (string)$the_post->{'video-caption'}
+                )
+            ),
+            2
+        )[0];
+
+        // Only do any more if content is required
+        if ( 'none' != $local_params['content_type'] ) {
+            // Derive an appropriately sized version of the media
+            $media_url = '';
+            $media_width = 0;
+            foreach( $the_post->{'video-player'} as $the_video ) {
+                if ( ( $the_video['max-width'] <= $local_params['media_width'] )
+                  && ( $the_video['max-width'] > $media_width ) ) {
+                    $media_url = (string)$the_video;
+                    $media_width = $the_video['max-width'];
+                }
+            }
+            if ( $media_width > 0 ) {
+                $post_media = $media_url;
+            }
+
+            // And as much of the body as we require
+            if ( 'excerpt' == $local_params['content_type'] ) {
+                $post_body = $this->trim_words(
+                    (string)$the_post->{'video-caption'},
+                    $local_params['excerpt_size'],
+                    '&hellip; <a href="' . $the_post['url'] . '">[more]</a>'
+                );
+            } else {
+                $post_body = strip_tags( (string)$the_post->{'video-caption'}, '<p>' );
+            }
+        }
         break;
     case 'audio':           // Audio
-echo "<p>audio</p>";
+        // Extract the title from the caption
+        $dom = new DOMDocument();
+        $dom->loadHTML( (string)$the_post->{'audio-caption'} );
+        $xpath = new DOMXpath( $dom );
+        $xres = $xpath->query( '//*[name()="h1" or name()="h2" or name()="h3"]' );
+        if ( $xres->length > 0 ) {
+            // Save the title
+            $post_title = $xres->item(0)->nodeValue;
+
+            // And remove it from the DOM document
+            $xres->item(0)->parentNode->removeChild($xres->item(0));
+        } else {
+            // No title found, so pluck out the first sentence instead
+            $post_title = preg_split( 
+                '/[.?!:]/', 
+                strip_tags(
+                    preg_replace(
+                        array( '/<a.*?<\/a>/', '/<p>:<\/p>/' ),
+                        '',
+                        (string)$the_post->{'audio-caption'}
+                    )
+                ), 
+                2
+            )[0];
+        }
+        
+        // And now the content, if required
+        if ( 'none' != $local_params['content_type'] ) {
+            $post_media = (string)$the_post->{'audio-player'};
+
+            // And as much of the body as we require
+            if ( 'excerpt' == $local_params['content_type'] ) {
+                $post_body = $this->trim_words(
+                    (string)$the_post->{'audio-caption'},
+                    $local_params['excerpt_size'],
+                    '&hellip; <a href="' . $the_post['url'] . '">[more]</a>'
+                );
+            } else {
+                $post_body = strip_tags( (string)$the_post->{'audio-caption'}, '<p>' );
+            }
+        }
         break;
     case 'answer':          // Question and answer
-echo "<p>answer</p>";
+        // The question can be the title, and the answer the body!
+        $post_title = strip_tags( (string)$the_post->{'question'} );
+        if ( 'excerpt' == $local_params['content_type'] ) {
+            $post_body = $this->trim_words(
+                (string)$the_post->{'answer'},
+                $local_params['excerpt_size'],
+                '&hellip; <a href="' . $the_post['url'] . '">[more]</a>'
+            );
+        } else if ( 'full' == $local_params['content_type'] ) {
+            $post_body = strip_tags( (string)$the_post->{'answer'}, '<p>' );
+        }
         break;
     }
 
@@ -96,8 +256,14 @@ echo "<p>answer</p>";
         $post_title = ucwords( str_replace( '-', ' ', $the_post['slug'] ) );
     }
 
+    // No slug? Err, crap! 
+    if ( empty( $post_title ) ) {
+        $post_title = (string)$the_post['type'];
+    }
+
     // And we're ready!
-    echo '<a href="' . $the_post['url'] . '"><h3>' . $post_title . '</h3></a>';
+    echo '<a href="' . esc_url( $the_post['url'] ) . '"><h3>' 
+       . esc_html( $post_title ) . '</h3></a>';
 
     // If we have any media, that next.
     echo '<div class="f2-tumblr-media ' . $local_params['media_align'] 
