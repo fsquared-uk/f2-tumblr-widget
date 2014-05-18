@@ -56,7 +56,7 @@ foreach( $tumblr_xml->posts->post as $the_post ) {
         break;
     case 'quote':           // Quoted text
         // Use the (first sentence of) attributed source as a title
-        $post_title = preg_split( 
+        $title_split = preg_split( 
             '/[.?!:]/', 
             strip_tags(
                 preg_replace(
@@ -66,7 +66,8 @@ foreach( $tumblr_xml->posts->post as $the_post ) {
                 )
             ), 
             2
-        )[0];
+        );
+        $post_title = $title_split[0];
 
         // And the quote itself as the body - only do any more is required
         if ( 'excerpt' == $local_params['content_type'] ) {
@@ -93,7 +94,7 @@ foreach( $tumblr_xml->posts->post as $the_post ) {
             $xres->item(0)->parentNode->removeChild($xres->item(0));
         } else {
             // No title found, so pluck out the first sentence instead
-            $post_title = preg_split( 
+            $title_split = preg_split( 
                 '/[.?!:]/', 
                 strip_tags(
                     preg_replace(
@@ -103,7 +104,8 @@ foreach( $tumblr_xml->posts->post as $the_post ) {
                     )
                 ), 
                 2
-            )[0];
+            );
+            $post_title = $title_split[0];
         }
 
         // Only do any more if content is required
@@ -153,7 +155,7 @@ foreach( $tumblr_xml->posts->post as $the_post ) {
         break;
     case 'video':           // Video
         // Try to finda caption
-        $post_title = preg_split(
+        $title_split = preg_split(
             '/[.?!:]/',
             strip_tags(
                 preg_replace(
@@ -163,7 +165,8 @@ foreach( $tumblr_xml->posts->post as $the_post ) {
                 )
             ),
             2
-        )[0];
+        );
+        $post_title = $title_split[0];
 
         // Only do any more if content is required
         if ( 'none' != $local_params['content_type'] ) {
@@ -207,7 +210,7 @@ foreach( $tumblr_xml->posts->post as $the_post ) {
             $xres->item(0)->parentNode->removeChild($xres->item(0));
         } else {
             // No title found, so pluck out the first sentence instead
-            $post_title = preg_split( 
+            $title_split = preg_split( 
                 '/[.?!:]/', 
                 strip_tags(
                     preg_replace(
@@ -217,7 +220,8 @@ foreach( $tumblr_xml->posts->post as $the_post ) {
                     )
                 ), 
                 2
-            )[0];
+            );
+            $post_title = $title_split[0];
         }
         
         // And now the content, if required
