@@ -39,12 +39,16 @@ class F2_Tumblr_Widget extends WP_Widget {
         'cache_period'  => 10,
         'post_type'     => 'all',
         'media_width'   => '100',
-        'media_align'   => 'center',
+        'media_align'   => 'aligncenter',
         'post_tag'      => '',
         'content_type'  => 'excerpt',
         'excerpt_size'  => '50',
         'display_type'  => 'list',
         'slide_speed'   => '10',
+        'title_size'    => '',
+        'text_size'     => '',
+        'line_spacing'  => '',
+        'media_padding' => '',
     );
 
     protected $allowed_post_types = array();
@@ -52,6 +56,11 @@ class F2_Tumblr_Widget extends WP_Widget {
     protected $allowed_display_types = array();
     protected $allowed_content_types = array();
     protected $allowed_media_alignments = array();
+
+    protected $allowed_css_units = array(
+        'em', 'ex', 'ch', 'rem', 'vw', 'vh', 'vmin', 'vmax', 
+        'cm', 'mm', 'in', 'px', 'pt', 'pc', '%',
+    );
 
 	/*--------------------------------------------------*/
 	/* Constructor
@@ -83,6 +92,11 @@ class F2_Tumblr_Widget extends WP_Widget {
 		// Register site styles and scripts
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_styles' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'ajax_enqueue_style' ) );
+
+        // Add in an AJAX handler to allow dynamically generated CSS
+        add_action( 'wp_ajax_f2_tumblr_dynamic_css', array( $this, 'ajax_dynamic_css' ) );
+        add_action( 'wp_ajax_nopriv_f2_tumblr_dynamic_css', array( $this, 'ajax_dynamic_css' ) );
 
 		// Refreshing the widget's cached output with each new post
 		add_action( 'save_post',    array( $this, 'flush_widget_cache' ) );
@@ -261,6 +275,36 @@ class F2_Tumblr_Widget extends WP_Widget {
             $instance['content_type'] = $new_instance['content_type'];
         }
 
+        // And lastly, CSS dimension rules...
+        if ( empty( $new_instance['title_size'] )
+          || !in_array( $new_instance['title_size_units'], $this->allowed_css_units ) ) {
+            $instance['title_size'] = '';
+        } else {
+            $instance['title_size'] = floatval( $new_instance['title_size'] )
+                                    . $new_instance['title_size_units'];
+        }
+        if ( empty( $new_instance['text_size'] )
+          || !in_array( $new_instance['text_size_units'], $this->allowed_css_units ) ) {
+            $instance['text_size'] = '';
+        } else {
+            $instance['text_size'] = floatval( $new_instance['text_size'] )
+                                   . $new_instance['text_size_units'];
+        }
+        if ( empty( $new_instance['line_spacing'] )
+          || !in_array( $new_instance['line_spacing_units'], $this->allowed_css_units ) ) {
+            $instance['line_spacing'] = '';
+        } else {
+            $instance['line_spacing'] = floatval( $new_instance['line_spacing'] )
+                                   . $new_instance['line_spacing_units'];
+        }
+        if ( empty( $new_instance['media_padding'] )
+          || !in_array( $new_instance['media_padding_units'], $this->allowed_css_units ) ) {
+            $instance['media_padding'] = '';
+        } else {
+            $instance['media_padding'] = floatval( $new_instance['media_padding'] )
+                                   . $new_instance['media_padding_units'];
+        }
+
 		return $instance;
 
 	} // end widget
@@ -310,6 +354,77 @@ class F2_Tumblr_Widget extends WP_Widget {
         }
 
         return $text;
+    }
+
+    /**
+     * Handles the callback for custom CSS
+     */
+    public function ajax_dynamic_css() {
+
+        // Check that we've been called right
+
+        // Need to set the content type right
+        header('Content-type: text/css');
+
+        // So, work through all instances and put out any required CSS
+        foreach( get_option( $this->option_name ) as $key => $instance ) {
+
+            // Actual instances will be numeric keys
+            if ( !is_numeric( $key ) ) {
+                continue;
+            }
+
+            // So process it, taking into account defaults
+            $local_params = wp_parse_args( $instance, $this->default_settings );
+            if ( strlen( $local_params['title_size'] ) > 0 ) {
+                echo '#' . $this->id_base . '-' . $key
+                   . ' div.f2-tumblr-post h3 { '
+                   . 'font-size: ' . $local_params['title_size'] . ';'
+                   . '}';
+            }
+            if ( strlen( $local_params['text_size'] ) 
+              || strlen( $local_params['line_spacing'] ) > 0 ) {
+                echo '#' . $this->id_base . '-' . $key
+                   . ' div.f2-tumblr-post p { ';
+                if ( strlen( $local_params['text_size'] ) > 0 ) {
+                    echo 'font-size: ' . $local_params['text_size'] . ';';
+                }
+                if ( strlen( $local_params['line_spacing'] ) > 0 ) {
+                    echo 'line-height: ' . $local_params['line_spacing'] . ';';
+                }
+                echo '}';
+            }
+            if ( strlen( $local_params['media_padding'] ) > 0 ) {
+                echo '#' . $this->id_base . '-' . $key
+                   . ' div.f2-tumblr-media img { ';
+                if ( 'alignleft' == $local_params['media_align' ] ) {
+                    echo 'margin-right: ' . $local_params['media_padding'] . ';';
+                    echo '} #' . $this->id_base . '-' . $key
+                       . ' div.f2-tumblr-media { ' 
+                       . 'margin-right: 0px;';
+
+                } else if ( 'alignright' == $local_params['media_align' ] ) {
+                    echo 'margin-left: ' . $local_params['media_padding'] . ';';
+                    echo '} #' . $this->id_base . '-' . $key
+                       . ' div.f2-tumblr-media { ' 
+                       . 'margin-left: 0px;';
+                }
+                echo '}';
+            }
+        }
+
+        // All done, so die
+        die();
+    }
+
+    /**
+     * Enqueues the widget-specific CSS callback
+     */
+    public function ajax_enqueue_style() {
+        wp_enqueue_style( 
+            $this->get_widget_slug() . '-custom-style-' . $this->id,
+            admin_url( 'admin-ajax.php?action=f2_tumblr_dynamic_css' )
+        );
     }
 
 	/*--------------------------------------------------*/
