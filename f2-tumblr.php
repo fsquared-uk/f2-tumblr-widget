@@ -245,7 +245,6 @@ class F2_Tumblr_Widget extends WP_Widget {
 
         // Clean up user text inputs
         $instance['title'] = strip_tags( $new_instance['title'] );
-        $instance['tumblr'] = strip_tags( $new_instance['tumblr'] );
         $instance['post_tag'] = strip_tags( $new_instance['post_tag'] );
 
         // Numeric ones
@@ -257,6 +256,14 @@ class F2_Tumblr_Widget extends WP_Widget {
         if ( !empty( $new_instance['slide_speed'] ) ) {
             $instance['slide_speed'] = intval( $new_instance['slide_speed'] );
         }
+
+        // The provided URL needs to be free of things like protocol
+        if ( 'http' == mb_substr( $new_instance['tumblr'], 0, 4 ) ) {
+            $entered_url = $new_instance['tumblr'];
+        } else {
+            $entered_url = 'http://' . $new_instance['tumblr'];
+        }
+        $instance['tumblr'] = parse_url( $entered_url, PHP_URL_HOST );
 
         // And selections
         if ( array_key_exists( $new_instance['post_type'], $this->allowed_post_types ) ) {
