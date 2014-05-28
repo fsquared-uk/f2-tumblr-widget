@@ -14,7 +14,7 @@
  * Plugin Name:       F2 Tumblr Widget
  * Plugin URI:        http://www.fsquared.co.uk/software/f2-tumblr/
  * Description:       Widget to display recent posts from a tumblr blog
- * Version:           0.2.0
+ * Version:           0.2.1
  * Author:            fsquared limited
  * Author URI:        http://www.fsquared.co.uk
  * Text Domain:       f2-tumblr-widget
