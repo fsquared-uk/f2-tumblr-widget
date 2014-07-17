@@ -81,31 +81,34 @@ foreach( $tumblr_xml->posts->post as $the_post ) {
         }
         break;
     case 'photo':           // Photograph
-        // Try and extract some sort of sensible title from the caption
-        $dom = new DOMDocument();
-        $dom->loadHTML( (string)$the_post->{'photo-caption'} );
-        $xpath = new DOMXpath( $dom );
-        $xres = $xpath->query( '//*[name()="h1" or name()="h2" or name()="h3"]' );
-        if ( $xres->length > 0 ) {
-            // Save the title
-            $post_title = $xres->item(0)->nodeValue;
+        // Try and extract some sort of sensible title from the caption,
+        // assuming of course that there is one!
+        if ( !empty( $the_post->{'photo-caption'} ) ) {
+            $dom = new DOMDocument();
+            $dom->loadHTML( (string)$the_post->{'photo-caption'} );
+            $xpath = new DOMXpath( $dom );
+            $xres = $xpath->query( '//*[name()="h1" or name()="h2" or name()="h3"]' );
+            if ( $xres->length > 0 ) {
+                // Save the title
+                $post_title = $xres->item(0)->nodeValue;
 
-            // And remove it from the DOM document
-            $xres->item(0)->parentNode->removeChild($xres->item(0));
-        } else {
-            // No title found, so pluck out the first sentence instead
-            $title_split = preg_split( 
-                '/[.?!:]/', 
-                strip_tags(
-                    preg_replace(
-                        array( '/<a.*?<\/a>/', '/<p>:<\/p>/' ),
-                        '',
-                        (string)$the_post->{'photo-caption'}
-                    )
-                ), 
-                2
-            );
-            $post_title = $title_split[0];
+                // And remove it from the DOM document
+                $xres->item(0)->parentNode->removeChild($xres->item(0));
+            } else {
+                // No title found, so pluck out the first sentence instead
+                $title_split = preg_split( 
+                    '/[.?!:]/', 
+                    strip_tags(
+                        preg_replace(
+                            array( '/<a.*?<\/a>/', '/<p>:<\/p>/' ),
+                            '',
+                            (string)$the_post->{'photo-caption'}
+                        )
+                    ), 
+                    2
+                );
+                $post_title = $title_split[0];
+            }
         }
 
         // Only do any more if content is required
@@ -226,7 +229,18 @@ foreach( $tumblr_xml->posts->post as $the_post ) {
         
         // And now the content, if required
         if ( 'none' != $local_params['content_type'] ) {
-            $post_media = (string)$the_post->{'audio-player'};
+            $media_embed = (string)$the_post->{'audio-player'};
+            
+            // Optionally, tweak the width to our set media width
+            if ( 1 == $local_params['audio_width'] ) {
+                $post_media = preg_replace( 
+                    '/ width="[0-9]+" /', 
+                    ' width="' . $local_params['media_width'] . '" ',
+                    $media_embed
+                );
+            } else {
+                $post_media = $media_embed;
+            }
 
             // And as much of the body as we require
             if ( 'excerpt' == $local_params['content_type'] ) {

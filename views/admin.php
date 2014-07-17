@@ -139,6 +139,14 @@
       ?>
     </select>
   </label>
+  <label>
+    <?php _e( 'Apply to Audio Posts:', $this->get_widget_slug() ); ?>
+    <input type="checkbox" 
+           id="<?php echo $this->get_field_id('audio_width'); ?>"
+           name="<?php echo $this->get_field_name('audio_width'); ?>"
+           value="1"
+           <?php checked( $local_params['audio_width'], 1 ); ?>>
+  </label>
 </p>
 <p>
   <label>

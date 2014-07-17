@@ -4,7 +4,7 @@ Contributors: fsquared
 Tags: widget, tumblr, feed
 Requires at least: 3.3
 Tested up to: 3.9
-Stable tag: 0.2.1
+Stable tag: 0.2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -21,6 +21,10 @@ or a slideshow.
 Posts can be displayed in full, as title only, or with an excerpt. Photo,
 video and audio posts will have the media displayed when the display type
 is not 'title only'.
+
+The audio player in posts can now be automatically resized to match the 
+selected media width - this is enabled by default, but can be deselected
+in the widget setup.
 
 == Installation ==
 
@@ -43,6 +47,10 @@ will be used (h1 to h3) or, if none can be found, the first sentence.
 1. Widget configuration
 
 == Changelog ==
+
+= 0.2.2 =
+* Added the option to adjust the width of the player in audio posts to match
+  the chosen media width. 
 
 = 0.2.1 =
 * Added CSS to ensure that media posts with short text are properly separated.
