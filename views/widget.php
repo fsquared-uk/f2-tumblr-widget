@@ -109,9 +109,22 @@ foreach( $tumblr_xml->posts->post as $the_post ) {
                 );
                 $post_title = $title_split[0];
             }
+
+            // Pull out as much of the caption as we require for the content
+            if ( 'none' != $local_params['content_type'] ) {
+                if ( 'excerpt' == $local_params['content_type'] ) {
+                    $post_body = $this->trim_words(
+                        $dom->saveHTML(),
+                        $local_params['excerpt_size'],
+                        '&hellip; <a href="' . $the_post['url'] . '">[more]</a>'
+                    );
+                } else {
+                    $post_body = strip_tags( $dom->saveHTML(), '<p>' );
+                }
+            }
         }
 
-        // Only do any more if content is required
+        // Also, as long as we have content, pull out the media
         if ( 'none' != $local_params['content_type'] ) {
             // Derive an appropriately sized version of the media
             $media_url = '';
@@ -127,17 +140,6 @@ foreach( $tumblr_xml->posts->post as $the_post ) {
                 $post_media = '<img class="' . $local_params['media_align']
                             . '" src="' . $media_url 
                             . '" alt="'. $post_title . '">';
-            }
-
-            // And as much of the body as we require
-            if ( 'excerpt' == $local_params['content_type'] ) {
-                $post_body = $this->trim_words(
-                    $dom->saveHTML(),
-                    $local_params['excerpt_size'],
-                    '&hellip; <a href="' . $the_post['url'] . '">[more]</a>'
-                );
-            } else {
-                $post_body = strip_tags( $dom->saveHTML(), '<p>' );
             }
         }
         break;

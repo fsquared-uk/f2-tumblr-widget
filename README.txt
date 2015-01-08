@@ -3,8 +3,8 @@
 Contributors: fsquared
 Tags: widget, tumblr, feed
 Requires at least: 3.3
-Tested up to: 4.0
-Stable tag: 0.2.2
+Tested up to: 4.1
+Stable tag: 0.2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,11 @@ will be used (h1 to h3) or, if none can be found, the first sentence.
 1. Widget configuration
 
 == Changelog ==
+
+= 0.2.3 =
+* Bug fix, to prevent the widget failing when processing a Tumblr photo post
+  that contains no caption.
+* Moved the widget script loading into the footer.
 
 = 0.2.2 =
 * Added the option to adjust the width of the player in audio posts to match

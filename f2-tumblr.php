@@ -14,7 +14,7 @@
  * Plugin Name:       F2 Tumblr Widget
  * Plugin URI:        http://www.fsquared.co.uk/software/f2-tumblr/
  * Description:       Widget to display recent posts from a tumblr blog
- * Version:           0.2.2
+ * Version:           0.2.3
  * Author:            fsquared limited
  * Author URI:        http://www.fsquared.co.uk
  * Text Domain:       f2-tumblr-widget
@@ -482,7 +482,7 @@ class F2_Tumblr_Widget extends WP_Widget {
 	 */
 	public function register_widget_scripts() {
 
-		wp_enqueue_script( $this->get_widget_slug().'-script', plugins_url( 'js/widget.js', __FILE__ ), array('jquery') );
+		wp_enqueue_script( $this->get_widget_slug().'-script', plugins_url( 'js/widget.js', __FILE__ ), array('jquery'), false, true );
 
 	} // end register_widget_scripts
 
