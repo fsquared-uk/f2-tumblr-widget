@@ -111,16 +111,14 @@ foreach( $tumblr_xml->posts->post as $the_post ) {
             }
 
             // Pull out as much of the caption as we require for the content
-            if ( 'none' != $local_params['content_type'] ) {
-                if ( 'excerpt' == $local_params['content_type'] ) {
-                    $post_body = $this->trim_words(
-                        $dom->saveHTML(),
-                        $local_params['excerpt_size'],
-                        '&hellip; <a href="' . $the_post['url'] . '">[more]</a>'
-                    );
-                } else {
-                    $post_body = strip_tags( $dom->saveHTML(), '<p>' );
-                }
+            if ( 'excerpt' == $local_params['content_type'] ) {
+                $post_body = $this->trim_words(
+                    $dom->saveHTML(),
+                    $local_params['excerpt_size'],
+                    '&hellip; <a href="' . $the_post['url'] . '">[more]</a>'
+                );
+            } else if ( 'full' == $local_params['content_type'] ) {
+                $post_body = strip_tags( $dom->saveHTML(), '<p>' );
             }
         }
 
@@ -159,7 +157,7 @@ foreach( $tumblr_xml->posts->post as $the_post ) {
         }
         break;
     case 'video':           // Video
-        // Try to finda caption
+        // Try to find a caption
         $title_split = preg_split(
             '/[.?!:]/',
             strip_tags(
@@ -196,7 +194,7 @@ foreach( $tumblr_xml->posts->post as $the_post ) {
                     $local_params['excerpt_size'],
                     '&hellip; <a href="' . $the_post['url'] . '">[more]</a>'
                 );
-            } else {
+            } else if ( 'full' == $local_params['content_type'] ) {
                 $post_body = strip_tags( (string)$the_post->{'video-caption'}, '<p>' );
             }
         }
@@ -251,7 +249,7 @@ foreach( $tumblr_xml->posts->post as $the_post ) {
                     $local_params['excerpt_size'],
                     '&hellip; <a href="' . $the_post['url'] . '">[more]</a>'
                 );
-            } else {
+            } else if ( 'full' == $local_params['content_type'] ) {
                 $post_body = strip_tags( (string)$the_post->{'audio-caption'}, '<p>' );
             }
         }
@@ -279,6 +277,12 @@ foreach( $tumblr_xml->posts->post as $the_post ) {
     // No slug? Err, crap! 
     if ( empty( $post_title ) ) {
         $post_title = (string)$the_post['type'];
+    }
+
+    // Optionally, clean up any windows 1252 junk (smart quotes and friends)
+    if ( 1 == $local_params['clean_quotes'] ) {
+        $post_title = $this->clean_encoding( $post_title );
+        $post_body = $this->clean_encoding( $post_body );
     }
 
     // And we're ready!

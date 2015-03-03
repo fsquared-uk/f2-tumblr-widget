@@ -4,7 +4,7 @@ Contributors: fsquared
 Tags: widget, tumblr, feed
 Requires at least: 3.3
 Tested up to: 4.1
-Stable tag: 0.2.3
+Stable tag: 0.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -42,11 +42,24 @@ Tumblr does not allow all post types to have a formal title defined. For
 those post types (such as photos), either the first HTML header in the caption
 will be used (h1 to h3) or, if none can be found, the first sentence.
 
+= Why do I see strange characters instead of quotes? =
+
+If your tumblr posts contain 'smart quotes', these can sometimes be rendered
+as strange characters to some users. The plugin will attempt to convert these
+to plain quotes, unless the 'Replace "special" characters' option is unticked.
+
 == Screenshots ==
 
 1. Widget configuration
 
 == Changelog ==
+
+= 0.2.4 =
+* Added an option to replace "special" characters such a smart quotes, which
+  can cause display problems for some users. This is on by default, but can
+  be unchecked if for some reason desired.
+* Added a 'Title And Media' content type option; this shows just the title
+  and any media - essentially it's 'Post Excerpt' but with no text. 
 
 = 0.2.3 =
 * Bug fix, to prevent the widget failing when processing a Tumblr photo post

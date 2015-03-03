@@ -14,7 +14,7 @@
  * Plugin Name:       F2 Tumblr Widget
  * Plugin URI:        http://www.fsquared.co.uk/software/f2-tumblr/
  * Description:       Widget to display recent posts from a tumblr blog
- * Version:           0.2.3
+ * Version:           0.2.4
  * Author:            fsquared limited
  * Author URI:        http://www.fsquared.co.uk
  * Text Domain:       f2-tumblr-widget
@@ -50,6 +50,7 @@ class F2_Tumblr_Widget extends WP_Widget {
         'line_spacing'  => '',
         'media_padding' => '',
         'audio_width'   => 1,
+        'clean_quotes'  => 1
     );
 
     protected $allowed_post_types = array();
@@ -123,6 +124,7 @@ class F2_Tumblr_Widget extends WP_Widget {
         $this->allowed_media_widths['1280'] = __( '1280px', $this->get_widget_slug() );
 
         $this->allowed_content_types['none'] = __( 'Title Only', $this->get_widget_slug() );
+        $this->allowed_content_types['media'] = __( 'Title And Media', $this->get_widget_slug() );
         $this->allowed_content_types['excerpt'] = __( 'Post Excerpt', $this->get_widget_slug() );
         $this->allowed_content_types['full'] = __( 'Whole Post', $this->get_widget_slug() );
 
@@ -252,6 +254,7 @@ class F2_Tumblr_Widget extends WP_Widget {
         $instance['posts'] = intval( $new_instance['posts'] );
         $instance['cache_period'] = intval( $new_instance['cache_period'] );
         $instance['audio_width'] = intval( $new_instance['audio_width'] );
+        $instance['clean_quotes'] = intval( $new_instance['clean_quotes'] );
         if ( !empty( $new_instance['excerpt_size'] ) ) {
             $instance['excerpt_size'] = intval( $new_instance['excerpt_size'] );
         }
@@ -485,6 +488,33 @@ class F2_Tumblr_Widget extends WP_Widget {
 		wp_enqueue_script( $this->get_widget_slug().'-script', plugins_url( 'js/widget.js', __FILE__ ), array('jquery'), false, true );
 
 	} // end register_widget_scripts
+
+    /**
+     * Cleans up smart quotes and other less-than-portable characters
+     */
+    private function clean_encoding( $p_text ) {
+
+        // First, strip offending UTF-8 characters
+        $p_text = str_replace
+            (
+                array( "\xe2\x80\x98", "\xe2\x80\x99", "\xe2\x80\x9c", 
+                       "\xe2\x80\x9d", "\xe2\x80\x93", "\xe2\x80\x94", 
+                       "\xe2\x80\xa6" ),
+                array( "'", "'", '"', '"', '-', '--', '...' ),
+                $p_text
+            );
+
+        // And then the same for Windows 1252 ones
+        $p_text = str_replace
+            (
+                array( chr(145), chr(146), chr(147), chr(148),
+                       chr(150), chr(151), chr(133) ),
+                array( "'", "'", '"', '"', '-', '--', '...' ),
+                $p_text
+            );
+
+        return $p_text;
+    }
 
 } // end class
 

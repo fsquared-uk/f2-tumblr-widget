@@ -197,6 +197,16 @@
     </select>
   </label>
 </p>
+<p>
+  <label>
+    <?php _E( 'Replace "special" characters:', $this->get_widget_slug() ); ?>
+    <input type="checkbox"
+           id="<?php echo $this->get_field_id('clean_quotes'); ?>"
+           name="<?php echo $this->get_field_name('clean_quotes'); ?>"
+           value="1"
+           <?php checked( $local_params['clean_quotes'], 1 ); ?>>
+  </label>
+</p>
 <h3>Style Settings</h3>
 <p>
   Control formatting without the need to update stylesheets.
