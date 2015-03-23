@@ -1,4 +1,4 @@
-// Styles to space things out sensibly
+/* Styles to space things out sensibly */
 .f2-tumblr-post {
   margin-bottom: 10px;
 }
@@ -12,7 +12,7 @@
   margin-bottom: 5px;
 }
 
-// Styles to handle the slideshow version
+/* Styles to handle the slideshow version */
 .f2-tumblr-slideshow {
   position: relative;
 }
