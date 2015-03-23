@@ -4,7 +4,7 @@ Contributors: fsquared
 Tags: widget, tumblr, feed
 Requires at least: 3.3
 Tested up to: 4.1
-Stable tag: 0.2.4
+Stable tag: 0.2.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -53,6 +53,10 @@ to plain quotes, unless the 'Replace "special" characters' option is unticked.
 1. Widget configuration
 
 == Changelog ==
+
+= 0.2.5 =
+* Fixed some bad comments in the stylesheet which prevented some styling from
+  getting properly applied. Thanks to jchriscook for spotting this!
 
 = 0.2.4 =
 * Added an option to replace "special" characters such a smart quotes, which
