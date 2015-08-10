@@ -15,7 +15,11 @@ if ( 'slide' == $local_params['display_type'] ) {
 // And work through each element, rendering it appropriately
 foreach( $tumblr_xml->posts->post as $the_post ) {
     // Wrap it in a div.
-    echo '<div class="f2-tumblr-post">';
+    echo '<div class="f2-tumblr-post';
+    if ( 'hlist' == $local_params['display_type'] ) {
+        echo ' f2-tumblr-horizontal';
+    }
+    echo '">';
 
     // Forget the last thing we rendered, obviously... :)
     $post_title = '';
@@ -285,13 +289,18 @@ foreach( $tumblr_xml->posts->post as $the_post ) {
         $post_body = $this->clean_encoding( $post_body );
     }
 
-    // And we're ready!
-    echo '<a href="' . esc_url( $the_post['url'] ) . '"><h3>' 
-       . esc_html( $post_title ) . '</h3></a>';
+    // So, output the title unless it's supressed, and the media if we have it
+    if ( 'bare' == $local_params['content_type'] ) {
+        echo '<a href="' . esc_url( $the_post['url'] ) . '">'
+           . '<div class="f2-tumblr-media ' . $local_params['media_align'] 
+           . '">' . $post_media . '</div></a>';
+    } else {
+        echo '<a href="' . esc_url( $the_post['url'] ) . '"><h3>' 
+           . esc_html( $post_title ) . '</h3></a>';
 
-    // If we have any media, that next.
-    echo '<div class="f2-tumblr-media ' . $local_params['media_align'] 
-       . '">' . $post_media . '</div>';
+        echo '<div class="f2-tumblr-media ' . $local_params['media_align'] 
+           . '">' . $post_media . '</div>';
+    }
 
     // And then the body - any trimming will have been done already here
     echo $post_body;

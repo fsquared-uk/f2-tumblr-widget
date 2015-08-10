@@ -3,8 +3,8 @@
 Contributors: fsquared
 Tags: widget, tumblr, feed
 Requires at least: 3.3
-Tested up to: 4.1
-Stable tag: 0.2.5
+Tested up to: 4.3
+Stable tag: 0.2.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -53,6 +53,13 @@ to plain quotes, unless the 'Replace "special" characters' option is unticked.
 1. Widget configuration
 
 == Changelog ==
+
+= 0.2.6 =
+* Added a new Content Tpe of 'Media Only', which shows photos / videos without
+  displaying post titles.
+* Added a new Display Type of 'Horizontal List' - this will show posts side
+  by side if the widget has sufficient space. Works best with media-only
+  posts.
 
 = 0.2.5 =
 * Fixed some bad comments in the stylesheet which prevented some styling from

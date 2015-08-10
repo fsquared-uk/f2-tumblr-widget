@@ -23,3 +23,9 @@
   top: 0px;
   left: 0px;
 }
+
+.f2-tumblr-horizontal {
+  display: inline-block;
+  margin-right: 10px;
+  vertical-align: top;
+}

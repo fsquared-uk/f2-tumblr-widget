@@ -14,7 +14,7 @@
  * Plugin Name:       F2 Tumblr Widget
  * Plugin URI:        http://www.fsquared.co.uk/software/f2-tumblr/
  * Description:       Widget to display recent posts from a tumblr blog
- * Version:           0.2.5
+ * Version:           0.2.6
  * Author:            fsquared limited
  * Author URI:        http://www.fsquared.co.uk
  * Text Domain:       f2-tumblr-widget
@@ -124,6 +124,7 @@ class F2_Tumblr_Widget extends WP_Widget {
         $this->allowed_media_widths['1280'] = __( '1280px', $this->get_widget_slug() );
 
         $this->allowed_content_types['none'] = __( 'Title Only', $this->get_widget_slug() );
+        $this->allowed_content_types['bare'] = __( 'Media Only', $this->get_widget_slug() );
         $this->allowed_content_types['media'] = __( 'Title And Media', $this->get_widget_slug() );
         $this->allowed_content_types['excerpt'] = __( 'Post Excerpt', $this->get_widget_slug() );
         $this->allowed_content_types['full'] = __( 'Whole Post', $this->get_widget_slug() );
@@ -132,7 +133,8 @@ class F2_Tumblr_Widget extends WP_Widget {
         $this->allowed_media_alignments['aligncenter'] = __( 'Centered', $this->get_widget_slug() );
         $this->allowed_media_alignments['alignright'] = __( 'Right', $this->get_widget_slug() );
 
-        $this->allowed_display_types['list'] = __( 'List', $this->get_widget_slug() );
+        $this->allowed_display_types['list'] = __( 'Vertical List', $this->get_widget_slug() );
+        $this->allowed_display_types['hlist'] = __( 'Horizontal List', $this->get_widget_slug() );
         $this->allowed_display_types['slide'] = __( 'Slideshow', $this->get_widget_slug() );
 	} // end constructor
 
