@@ -4,7 +4,7 @@ Contributors: fsquared
 Tags: widget, tumblr, feed
 Requires at least: 3.3
 Tested up to: 4.3
-Stable tag: 0.2.6
+Stable tag: 0.2.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -53,6 +53,10 @@ to plain quotes, unless the 'Replace "special" characters' option is unticked.
 1. Widget configuration
 
 == Changelog ==
+
+= 0.2.7 =
+* Fixed a bug in the caching code, which resulted in excessive calls to 
+  Tumblr.
 
 = 0.2.6 =
 * Added a new Content Tpe of 'Media Only', which shows photos / videos without

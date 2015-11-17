@@ -8,13 +8,13 @@
  * @author    Pete Favelle <pete@fsquared.co.uk>
  * @license   GPL-2.0+
  * @link      http://www.fsquared.co.uk
- * @copyright 2014 fsquared
+ * @copyright 2014-2015 fsquared
  *
  * @wordpress-plugin
  * Plugin Name:       F2 Tumblr Widget
  * Plugin URI:        http://www.fsquared.co.uk/software/f2-tumblr/
  * Description:       Widget to display recent posts from a tumblr blog
- * Version:           0.2.6
+ * Version:           0.2.7
  * Author:            fsquared limited
  * Author URI:        http://www.fsquared.co.uk
  * Text Domain:       f2-tumblr-widget
@@ -64,46 +64,46 @@ class F2_Tumblr_Widget extends WP_Widget {
         'cm', 'mm', 'in', 'px', 'pt', 'pc', '%',
     );
 
-	/*--------------------------------------------------*/
-	/* Constructor
-	/*--------------------------------------------------*/
+    /*--------------------------------------------------*/
+    /* Constructor
+    /*--------------------------------------------------*/
 
-	/**
-	 * Specifies the classname and description, instantiates the widget,
-	 * loads localization files, and includes necessary stylesheets 
+    /**
+     * Specifies the classname and description, instantiates the widget,
+     * loads localization files, and includes necessary stylesheets 
      * and JavaScript.
-	 */
-	public function __construct() {
+     */
+    public function __construct() {
 
-		// load plugin text domain
-		add_action( 'init', array( $this, 'widget_textdomain' ) );
+        // load plugin text domain
+        add_action( 'init', array( $this, 'widget_textdomain' ) );
 
-		parent::__construct(
-			$this->get_widget_slug(),
-			__( 'F2 Tumblr Widget', $this->get_widget_slug() ),
-			array(
-				'classname'  => $this->get_widget_slug().'-class',
-				'description' => __( 'Widget to display recent posts from a tumblr blog.', $this->get_widget_slug() )
-			)
-		);
+        parent::__construct(
+            $this->get_widget_slug(),
+            __( 'F2 Tumblr Widget', $this->get_widget_slug() ),
+            array(
+                'classname'  => $this->get_widget_slug().'-class',
+                'description' => __( 'Widget to display recent posts from a tumblr blog.', $this->get_widget_slug() )
+            )
+        );
 
-		// Register admin styles and scripts
-		add_action( 'admin_print_styles', array( $this, 'register_admin_styles' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_scripts' ) );
+        // Register admin styles and scripts
+        add_action( 'admin_print_styles', array( $this, 'register_admin_styles' ) );
+        add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_scripts' ) );
 
-		// Register site styles and scripts
-		add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_styles' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_scripts' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'ajax_enqueue_style' ) );
+        // Register site styles and scripts
+        add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_styles' ) );
+        add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_scripts' ) );
+        add_action( 'wp_enqueue_scripts', array( $this, 'ajax_enqueue_style' ) );
 
         // Add in an AJAX handler to allow dynamically generated CSS
         add_action( 'wp_ajax_f2_tumblr_dynamic_css', array( $this, 'ajax_dynamic_css' ) );
         add_action( 'wp_ajax_nopriv_f2_tumblr_dynamic_css', array( $this, 'ajax_dynamic_css' ) );
 
-		// Refreshing the widget's cached output with each new post
-		add_action( 'save_post',    array( $this, 'flush_widget_cache' ) );
-		add_action( 'deleted_post', array( $this, 'flush_widget_cache' ) );
-		add_action( 'switch_theme', array( $this, 'flush_widget_cache' ) );
+        // Refreshing the widget's cached output with each new post
+        add_action( 'save_post',    array( $this, 'flush_widget_cache' ) );
+        add_action( 'deleted_post', array( $this, 'flush_widget_cache' ) );
+        add_action( 'switch_theme', array( $this, 'flush_widget_cache' ) );
 
         // Initialise the allowed values for fields; has to be done here
         // so that we can load the correct language data
@@ -136,7 +136,7 @@ class F2_Tumblr_Widget extends WP_Widget {
         $this->allowed_display_types['list'] = __( 'Vertical List', $this->get_widget_slug() );
         $this->allowed_display_types['hlist'] = __( 'Horizontal List', $this->get_widget_slug() );
         $this->allowed_display_types['slide'] = __( 'Slideshow', $this->get_widget_slug() );
-	} // end constructor
+    } // end constructor
 
 
     /**
@@ -148,26 +148,27 @@ class F2_Tumblr_Widget extends WP_Widget {
         return $this->widget_slug;
     }
 
-	/*--------------------------------------------------*/
-	/* Widget API Functions
-	/*--------------------------------------------------*/
+    /*--------------------------------------------------*/
+    /* Widget API Functions
+    /*--------------------------------------------------*/
 
-	/**
-	 * Outputs the content of the widget.
-	 *
-	 * @param array args  The array of form elements
-	 * @param array instance The current instance of the widget
-	 */
-	public function widget( $args, $instance ) {
+    /**
+     * Outputs the content of the widget.
+     *
+     * @param array args  The array of form elements
+     * @param array instance The current instance of the widget
+     */
+    public function widget( $args, $instance ) {
 
         // Ensure that we have the widget ID handy
-		if ( ! isset ( $args['widget_id'] ) )
-			$args['widget_id'] = $this->id;
+        if ( ! isset ( $args['widget_id'] ) )
+            $args['widget_id'] = $this->id;
 
         // Check to see if we need to refresh the Tumblr feed
         $local_params = wp_parse_args( $instance, $this->default_settings );
         $tumblr_data = get_transient( $this->get_widget_slug() . $args['widget_id'] );
-        if ( !is_array( $tumblr_data ) ) {
+
+        if ( false === $tumblr_data ) {
 
             // So, fetch the data from Tumblr
             $tumblr_url = 'http://' . $local_params['tumblr'] 
@@ -193,19 +194,19 @@ class F2_Tumblr_Widget extends WP_Widget {
             $this->flush_widget_cache();
         }
 
-		// Check if there is a cached output
-		$cache = wp_cache_get( $this->get_widget_slug(), 'widget' );
-		if ( !is_array( $cache ) ) {
-			$cache = array();
+        // Check if there is a cached output
+        $cache = wp_cache_get( $this->get_widget_slug(), 'widget' );
+        if ( !is_array( $cache ) ) {
+            $cache = array();
         }
 
         // If there *is*, send that rather then doing the same work over
-		if ( isset ( $cache[ $args['widget_id'] ] ) ) {
-			return print $cache[ $args['widget_id'] ];
+        if ( isset ( $cache[ $args['widget_id'] ] ) ) {
+            return print $cache[ $args['widget_id'] ];
         }
 
         // So, looks like we have to do some work after all
-		$widget_string = $args['before_widget'];
+        $widget_string = $args['before_widget'];
 
         // Render any title we're provided with
         $title = apply_filters( 'widget_title', $local_params['title'] );
@@ -217,36 +218,36 @@ class F2_Tumblr_Widget extends WP_Widget {
 
         // And then fetch the main widget view
         ob_start();
-		include( plugin_dir_path( __FILE__ ) . 'views/widget.php' );
+        include( plugin_dir_path( __FILE__ ) . 'views/widget.php' );
         $widget_string .= ob_get_clean();
-		$widget_string .= $args['after_widget'];
+        $widget_string .= $args['after_widget'];
 
         // Save the rendered output in the cache
-		$cache[ $args['widget_id'] ] = $widget_string;
-		wp_cache_set( $this->get_widget_slug(), $cache, 'widget' );
+        $cache[ $args['widget_id'] ] = $widget_string;
+        wp_cache_set( $this->get_widget_slug(), $cache, 'widget' );
 
-		print $widget_string;
+        print $widget_string;
 
-	} // end widget
-	
-	/**
+    } // end widget
+    
+    /**
      * Clears widget data from the cache
      */
-	public function flush_widget_cache() 
-	{
-    	wp_cache_delete( $this->get_widget_slug(), 'widget' );
-	}
+    public function flush_widget_cache() 
+    {
+        wp_cache_delete( $this->get_widget_slug(), 'widget' );
+    }
 
 
-	/**
-	 * Processes the widget's options to be saved.
-	 *
-	 * @param array new_instance The new instance of values to be generated.
-	 * @param array old_instance The previous instance of values.
-	 */
-	public function update( $new_instance, $old_instance ) {
+    /**
+     * Processes the widget's options to be saved.
+     *
+     * @param array new_instance The new instance of values to be generated.
+     * @param array old_instance The previous instance of values.
+     */
+    public function update( $new_instance, $old_instance ) {
 
-		$instance = $old_instance;
+        $instance = $old_instance;
 
         // Clean up user text inputs
         $instance['title'] = strip_tags( $new_instance['title'] );
@@ -319,23 +320,26 @@ class F2_Tumblr_Widget extends WP_Widget {
                                    . $new_instance['media_padding_units'];
         }
 
-		return $instance;
+        // Clear the transient data, to force a refrsh of Tumblr data.
+        delete_transient( $this->get_widget_slug() . $this->id );
 
-	} // end widget
+        return $instance;
 
-	/**
-	 * Generates the administration form for the widget.
-	 *
-	 * @param array instance The array of keys and values for the widget.
-	 */
-	public function form( $instance ) {
+    } // end widget
+
+    /**
+     * Generates the administration form for the widget.
+     *
+     * @param array instance The array of keys and values for the widget.
+     */
+    public function form( $instance ) {
 
         $local_params = wp_parse_args( $instance, $this->default_settings );
 
-		// Display the admin form
-		include( plugin_dir_path(__FILE__) . 'views/admin.php' );
+        // Display the admin form
+        include( plugin_dir_path(__FILE__) . 'views/admin.php' );
 
-	} // end form
+    } // end form
 
     /**
      * Sanitised version of wp_trim_words, which doesn't strip out 
@@ -441,55 +445,55 @@ class F2_Tumblr_Widget extends WP_Widget {
         );
     }
 
-	/*--------------------------------------------------*/
-	/* Public Functions
-	/*--------------------------------------------------*/
+    /*--------------------------------------------------*/
+    /* Public Functions
+    /*--------------------------------------------------*/
 
-	/**
-	 * Loads the Widget's text domain for localization and translation.
-	 */
-	public function widget_textdomain() {
+    /**
+     * Loads the Widget's text domain for localization and translation.
+     */
+    public function widget_textdomain() {
 
-		load_plugin_textdomain( $this->get_widget_slug(), false, 
+        load_plugin_textdomain( $this->get_widget_slug(), false, 
                                 plugin_dir_path( __FILE__ ) . 'lang/' );
 
-	} // end widget_textdomain
+    } // end widget_textdomain
 
-	/**
-	 * Registers and enqueues admin-specific styles.
-	 */
-	public function register_admin_styles() {
+    /**
+     * Registers and enqueues admin-specific styles.
+     */
+    public function register_admin_styles() {
 
-		wp_enqueue_style( $this->get_widget_slug().'-admin-styles', plugins_url( 'css/admin.css', __FILE__ ) );
+        wp_enqueue_style( $this->get_widget_slug().'-admin-styles', plugins_url( 'css/admin.css', __FILE__ ) );
 
-	} // end register_admin_styles
+    } // end register_admin_styles
 
-	/**
-	 * Registers and enqueues admin-specific JavaScript.
-	 */
-	public function register_admin_scripts() {
+    /**
+     * Registers and enqueues admin-specific JavaScript.
+     */
+    public function register_admin_scripts() {
 
-		wp_enqueue_script( $this->get_widget_slug().'-admin-script', plugins_url( 'js/admin.js', __FILE__ ), array('jquery') );
+        wp_enqueue_script( $this->get_widget_slug().'-admin-script', plugins_url( 'js/admin.js', __FILE__ ), array('jquery') );
 
-	} // end register_admin_scripts
+    } // end register_admin_scripts
 
-	/**
-	 * Registers and enqueues widget-specific styles.
-	 */
-	public function register_widget_styles() {
+    /**
+     * Registers and enqueues widget-specific styles.
+     */
+    public function register_widget_styles() {
 
-		wp_enqueue_style( $this->get_widget_slug().'-widget-styles', plugins_url( 'css/widget.css', __FILE__ ) );
+        wp_enqueue_style( $this->get_widget_slug().'-widget-styles', plugins_url( 'css/widget.css', __FILE__ ) );
 
-	} // end register_widget_styles
+    } // end register_widget_styles
 
-	/**
-	 * Registers and enqueues widget-specific scripts.
-	 */
-	public function register_widget_scripts() {
+    /**
+     * Registers and enqueues widget-specific scripts.
+     */
+    public function register_widget_scripts() {
 
-		wp_enqueue_script( $this->get_widget_slug().'-script', plugins_url( 'js/widget.js', __FILE__ ), array('jquery'), false, true );
+        wp_enqueue_script( $this->get_widget_slug().'-script', plugins_url( 'js/widget.js', __FILE__ ), array('jquery'), false, true );
 
-	} // end register_widget_scripts
+    } // end register_widget_scripts
 
     /**
      * Cleans up smart quotes and other less-than-portable characters
