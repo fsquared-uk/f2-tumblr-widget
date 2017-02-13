@@ -3,8 +3,8 @@
 Contributors: fsquared
 Tags: widget, tumblr, feed
 Requires at least: 3.3
-Tested up to: 4.5.3
-Stable tag: 0.2.7
+Tested up to: 4.7.2
+Stable tag: 0.2.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -48,11 +48,31 @@ If your tumblr posts contain 'smart quotes', these can sometimes be rendered
 as strange characters to some users. The plugin will attempt to convert these
 to plain quotes, unless the 'Replace "special" characters' option is unticked.
 
+= My blog has an SSL certificate (https://) and I'm getting 'unsecured content' warnings? =
+
+By default, this widget pulls data from Tumblr over http; this results in
+displayed images also using this protocol. If you have an SSL certificate
+installed on your blog, you may see warnings from your browser about 'unsecured
+content' which refers to the images from Tumblr.
+
+If you change your Tumblr URL setting to be preceded by 'https://', the widget
+will access Tumblr over https and the resulting images will also be served
+securely.
+
+This will one day become the default approach, but for now is left up to the
+user as it can potentially cause problems on badly configured web servers.
+
 == Screenshots ==
 
 1. Widget configuration
 
 == Changelog ==
+
+= 0.2.8 =
+* Will how honour the HTTP protocol of the source tumblr, if provided. This
+  means that if you have an SSL certificate on your blog, you can avoid
+  the widget generating 'unsecured content' warnings by providing your Tumblr
+  URL with a 'https://' prefix.
 
 = 0.2.7 =
 * Fixed a bug in the caching code, which resulted in excessive calls to 

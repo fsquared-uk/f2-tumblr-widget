@@ -14,7 +14,7 @@
  * Plugin Name:       F2 Tumblr Widget
  * Plugin URI:        http://www.fsquared.co.uk/software/f2-tumblr/
  * Description:       Widget to display recent posts from a tumblr blog
- * Version:           0.2.7
+ * Version:           0.2.8
  * Author:            fsquared limited
  * Author URI:        http://www.fsquared.co.uk
  * Text Domain:       f2-tumblr-widget
@@ -171,7 +171,7 @@ class F2_Tumblr_Widget extends WP_Widget {
         if ( false === $tumblr_data ) {
 
             // So, fetch the data from Tumblr
-            $tumblr_url = 'http://' . $local_params['tumblr'] 
+            $tumblr_url = $local_params['tumblr'] 
                         . '/api/read?num=' . $local_params['posts'];
             if ( 'all' != $local_params['post_type'] ) {
                 $tumblr_url .= '&type=' . $local_params['post_type'];
@@ -265,13 +265,14 @@ class F2_Tumblr_Widget extends WP_Widget {
             $instance['slide_speed'] = intval( $new_instance['slide_speed'] );
         }
 
-        // The provided URL needs to be free of things like protocol
+        // The provided URL needs to be cleaned up a little
         if ( 'http' == mb_substr( $new_instance['tumblr'], 0, 4 ) ) {
             $entered_url = $new_instance['tumblr'];
         } else {
             $entered_url = 'http://' . $new_instance['tumblr'];
         }
-        $instance['tumblr'] = parse_url( $entered_url, PHP_URL_HOST );
+        $instance['tumblr'] = parse_url( $entered_url, PHP_URL_SCHEME ) 
+                            . '://' . parse_url( $entered_url, PHP_URL_HOST );
 
         // And selections
         if ( array_key_exists( $new_instance['post_type'], $this->allowed_post_types ) ) {
