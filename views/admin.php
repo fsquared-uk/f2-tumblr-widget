@@ -115,7 +115,7 @@
             id="<?php echo $this->get_field_id('posts'); ?>"
             name="<?php echo $this->get_field_name('posts'); ?>">
       <?php
-      for( $index = 1; $index <= 20; $index++ ) {
+      for( $index = 1; $index <= 50; $index++ ) {
         echo '<option value="' . $index . '" ';
         selected( $local_params['posts'], $index );
         echo '>' . $index . '</option>';

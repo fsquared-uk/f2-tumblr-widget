@@ -3,8 +3,8 @@
 Contributors: fsquared
 Tags: widget, tumblr, feed
 Requires at least: 3.3
-Tested up to: 4.7.2
-Stable tag: 0.2.8
+Tested up to: 4.8
+Stable tag: 0.2.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,10 @@ user as it can potentially cause problems on badly configured web servers.
 1. Widget configuration
 
 == Changelog ==
+
+= 0.2.9 =
+* Increased the maximum number of posts displayed from 20 to 50, which is
+  the maximum that the Tumblr V1 API will provide.
 
 = 0.2.8 =
 * Will how honour the HTTP protocol of the source tumblr, if provided. This
