@@ -29,3 +29,12 @@
   margin-right: 10px;
   vertical-align: top;
 }
+
+/* Styles to cope with fully-clickable posts. */
+.f2-tumblr-post-link {
+  display: block;
+}
+
+.f2-tumblr-post-link .f2-tumblr-post-clickable {
+  display: inline-block;
+}

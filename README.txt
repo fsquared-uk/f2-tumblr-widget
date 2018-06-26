@@ -3,8 +3,8 @@
 Contributors: fsquared
 Tags: widget, tumblr, feed
 Requires at least: 3.3
-Tested up to: 4.9
-Stable tag: 0.2.9
+Tested up to: 4.9.6
+Stable tag: 0.2.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,10 @@ user as it can potentially cause problems on badly configured web servers.
 1. Widget configuration
 
 == Changelog ==
+
+= 0.2.10 =
+* Added a new option to make the whole post clickable, rather than limiting
+  the link to just the displayed title or media. 
 
 = 0.2.9 =
 * Increased the maximum number of posts displayed from 20 to 50, which is

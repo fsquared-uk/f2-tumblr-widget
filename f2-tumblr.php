@@ -50,7 +50,8 @@ class F2_Tumblr_Widget extends WP_Widget {
         'line_spacing'  => '',
         'media_padding' => '',
         'audio_width'   => 1,
-        'clean_quotes'  => 1
+        'clean_quotes'  => 1,
+        'link_whole'    => 0
     );
 
     protected $allowed_post_types = array();
@@ -258,6 +259,7 @@ class F2_Tumblr_Widget extends WP_Widget {
         $instance['cache_period'] = intval( $new_instance['cache_period'] );
         $instance['audio_width'] = intval( $new_instance['audio_width'] );
         $instance['clean_quotes'] = intval( $new_instance['clean_quotes'] );
+        $instance['link_whole'] = intval( $new_instance['link_whole'] );
         if ( !empty( $new_instance['excerpt_size'] ) ) {
             $instance['excerpt_size'] = intval( $new_instance['excerpt_size'] );
         }

@@ -207,6 +207,16 @@
            <?php checked( $local_params['clean_quotes'], 1 ); ?>>
   </label>
 </p>
+<p>
+  <label>
+    <?php _E( 'Make whole post clickable:', $this->get_widget_slug() ); ?>
+    <input type="checkbox"
+           id="<?php echo $this->get_field_id('link_whole'); ?>"
+           name="<?php echo $this->get_field_name('link_whole'); ?>"
+           value="1"
+           <?php checked( $local_params['link_whole'], 1 ); ?>>
+  </label>
+</p>
 <h3>Style Settings</h3>
 <p>
   Control formatting without the need to update stylesheets.

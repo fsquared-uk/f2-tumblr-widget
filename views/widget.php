@@ -14,12 +14,6 @@ if ( 'slide' == $local_params['display_type'] ) {
 
 // And work through each element, rendering it appropriately
 foreach( $tumblr_xml->posts->post as $the_post ) {
-    // Wrap it in a div.
-    echo '<div class="f2-tumblr-post';
-    if ( 'hlist' == $local_params['display_type'] ) {
-        echo ' f2-tumblr-horizontal';
-    }
-    echo '">';
 
     // Forget the last thing we rendered, obviously... :)
     $post_title = '';
@@ -289,15 +283,33 @@ foreach( $tumblr_xml->posts->post as $the_post ) {
         $post_body = $this->clean_encoding( $post_body );
     }
 
+    // Output the widget then; it's wrapped in a div, although this in turn
+    // may be wrapped in an anchor first..
+    if ( 1 == $local_params['link_whole'] ) {
+      echo '<a class="f2-tumblr-post-link" href="' . esc_url( $the_post['url'] ) . '">';
+      $title_preamble = "";
+      $title_postamble = "";
+    } else {
+      $title_preamble = '<a href="' . esc_url( $the_post['url'] ) . '">';
+      $title_postamble = "</a>";
+    }
+    echo '<div class="f2-tumblr-post';
+    if ( 'hlist' == $local_params['display_type'] ) {
+        echo ' f2-tumblr-horizontal';
+    }
+    if ( 1 == $local_params['link_whole'] ) {
+        echo ' f2-tumblr-post-clickable';
+    }
+    echo '">';
+
     // So, output the title unless it's supressed, and the media if we have it
     if ( 'bare' == $local_params['content_type'] ) {
-        echo '<a href="' . esc_url( $the_post['url'] ) . '">'
-           . '<div class="f2-tumblr-media ' . $local_params['media_align'] 
-           . '">' . $post_media . '</div></a>';
+        echo $title_preamble . '<div class="f2-tumblr-media ' 
+           . $local_params['media_align'] . '">' . $post_media . '</div>'
+           . $title_postamble;
     } else {
-        echo '<a href="' . esc_url( $the_post['url'] ) . '"><h3>' 
-           . esc_html( $post_title ) . '</h3></a>';
-
+        echo $title_preamble .  '<h3>' . esc_html( $post_title ) . '</h3>'
+           . $title_postamble;
         echo '<div class="f2-tumblr-media ' . $local_params['media_align'] 
            . '">' . $post_media . '</div>';
     }
@@ -305,8 +317,11 @@ foreach( $tumblr_xml->posts->post as $the_post ) {
     // And then the body - any trimming will have been done already here
     echo $post_body;
 
-    // And close the div
+    // And close the widget wrapper(s)
     echo '</div>';
+    if ( 1 == $local_params['link_whole'] ) {
+        echo '</a>';
+    }
 }
 
 // Close any slideshow container
