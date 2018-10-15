@@ -1,8 +1,11 @@
 <?php
 // Parse the Tumblr feed
 try {
+    // Suppress XML warnings, which just fill up the error log
+    libxml_use_internal_errors( true );
     $tumblr_xml = new SimpleXMLElement( $tumblr_data );
 } catch( Exception $e ) {
+    libxml_clear_errors();
     return;
 }
 
