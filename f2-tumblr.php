@@ -8,13 +8,13 @@
  * @author    Pete Favelle <pete@fsquared.co.uk>
  * @license   GPL-2.0+
  * @link      http://www.fsquared.co.uk
- * @copyright 2014-2015 fsquared
+ * @copyright 2014-2018 fsquared
  *
  * @wordpress-plugin
  * Plugin Name:       F2 Tumblr Widget
  * Plugin URI:        http://www.fsquared.co.uk/software/f2-tumblr/
  * Description:       Widget to display recent posts from a tumblr blog
- * Version:           0.2.8
+ * Version:           0.2.12
  * Author:            fsquared limited
  * Author URI:        http://www.fsquared.co.uk
  * Text Domain:       f2-tumblr-widget
@@ -51,7 +51,8 @@ class F2_Tumblr_Widget extends WP_Widget {
         'media_padding' => '',
         'audio_width'   => 1,
         'clean_quotes'  => 1,
-        'link_whole'    => 0
+        'link_whole'    => 0,
+        'user_agent'    => 'Wget/1.18'
     );
 
     protected $allowed_post_types = array();
@@ -181,7 +182,9 @@ class F2_Tumblr_Widget extends WP_Widget {
                 $tumblr_url .= '&tagged=' . urlencode( $local_params['post_tag'] );
             }
             $tumblr_data = wp_remote_retrieve_body( 
-                wp_remote_get( $tumblr_url ) 
+                wp_remote_get( $tumblr_url, array (
+                    'user-agent' => $local_params['user_agent']
+                ) ) 
             );
 
             // Save this transient data
@@ -253,6 +256,7 @@ class F2_Tumblr_Widget extends WP_Widget {
         // Clean up user text inputs
         $instance['title'] = strip_tags( $new_instance['title'] );
         $instance['post_tag'] = strip_tags( $new_instance['post_tag'] );
+        $instance['user_agent'] = strip_tags( $new_instance['user_agent'] );
 
         // Numeric ones
         $instance['posts'] = intval( $new_instance['posts'] );

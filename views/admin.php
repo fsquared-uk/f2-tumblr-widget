@@ -350,3 +350,18 @@
     </select>    
   </label>
 </p>
+<h3>Advanced Settings</h3>
+<p>
+  These settings are for advanced tweaking to help address potential problems.
+  If in doubt, it's best to leave it alone!
+</p>
+<p>
+  <label>
+    <?php _e( 'User Agent:', $this->get_widget_slug() ); ?>
+    <input class="widefat" 
+           id="<?php echo $this->get_field_id('user_agent'); ?>"
+           name="<?php echo $this->get_field_name('user_agent'); ?>"
+           type="text"
+           value="<?php echo esc_attr( $local_params['user_agent'] ); ?>">
+  </label>
+</p>
