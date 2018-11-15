@@ -4,7 +4,7 @@ Contributors: fsquared
 Tags: widget, tumblr, feed
 Requires at least: 3.3
 Tested up to: 4.9.8
-Stable tag: 0.2.11
+Stable tag: 0.2.13
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -73,6 +73,9 @@ If you're experiencing an empty widget, please post on the widget support page, 
 1. Widget configuration
 
 == Changelog ==
+
+= 0.2.13 =
+* Merged all latest changes; this should force an update to become available via WordPress.org
 
 = 0.2.12 =
 * Added an option to specify the user-agent used to fetch data from Tumblr. This defaults to 'Wget/1.18', which prevents Tumblr from disrupting their API with a GDPR consent notice. This has been set to be configurable, in case Tumblr makes further changes to their servers.
