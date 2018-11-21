@@ -37,7 +37,7 @@ foreach( $tumblr_xml->posts->post as $the_post ) {
                 '&hellip; <a href="' . $the_post['url'] . '">[more]</a>'
             );
         } else if ( 'full' == $local_params['content_type'] ) {
-            $post_body = strip_tags( (string)$the_post->{'regular-body'}, '<p>' );
+            $post_body = strip_tags( (string)$the_post->{'regular-body'}, '<p><img>' );
         }
         break;
     case 'link':            // Anotated link URL
@@ -275,8 +275,8 @@ foreach( $tumblr_xml->posts->post as $the_post ) {
         $post_title = ucwords( str_replace( '-', ' ', $the_post['slug'] ) );
     }
 
-    // No slug? Err, crap! 
-    if ( empty( $post_title ) ) {
+    // No slug? Err, crap - tho only an issue if the whole post isn't clickable
+    if ( empty( $post_title ) && ( 1 != $local_params['link_whole'] ) ) {
         $post_title = (string)$the_post['type'];
     }
 
