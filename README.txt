@@ -4,7 +4,7 @@ Contributors: fsquared
 Tags: widget, tumblr, feed
 Requires at least: 3.3
 Tested up to: 4.9.8
-Stable tag: 0.2.13
+Stable tag: 0.2.14
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -73,6 +73,10 @@ If you're experiencing an empty widget, please post on the widget support page, 
 1. Widget configuration
 
 == Changelog ==
+
+= 0.2.14 =
+* Images included in tumblr posts marked as 'text' will now be displayed, when the content type is set to "Whole Post". These images will be limited to 100% of the widget.
+* Posts without titles or slugs will no longer have the post type used as a 'stand in' title when the whole post is set to clickable.
 
 = 0.2.13 =
 * Merged all latest changes; this should force an update to become available via WordPress.org
