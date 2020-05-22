@@ -3,8 +3,8 @@
 Contributors: fsquared
 Tags: widget, tumblr, feed
 Requires at least: 3.3
-Tested up to: 4.9.8
-Stable tag: 0.2.14
+Tested up to: 5.4.1
+Stable tag: 0.2.15
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -73,6 +73,10 @@ If you're experiencing an empty widget, please post on the widget support page, 
 1. Widget configuration
 
 == Changelog ==
+
+= 0.2.15 =
+* Fixed to accomodate changes in the Tumblr data (they have changed the case in the post type field, for some reason!)
+* Updated the WordPress version.
 
 = 0.2.14 =
 * Images included in tumblr posts marked as 'text' will now be displayed, when the content type is set to "Whole Post". These images will be limited to 100% of the widget.

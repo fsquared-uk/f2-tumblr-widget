@@ -24,7 +24,7 @@ foreach( $tumblr_xml->posts->post as $the_post ) {
     $post_body = '';
 
     // The exact processing depends on the post type
-    switch( (string)$the_post['type'] ) {
+    switch( strtolower((string)$the_post['type']) ) {
     case 'regular':         // Plain text
         // A nice easy one, this!
         $post_title = strip_tags( (string)$the_post->{'regular-title'} );
