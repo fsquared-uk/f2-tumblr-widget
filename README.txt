@@ -3,7 +3,7 @@
 Contributors: fsquared
 Tags: widget, tumblr, feed
 Requires at least: 3.3
-Tested up to: 5.4.1
+Tested up to: 5.7.1
 Stable tag: 0.2.15
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
