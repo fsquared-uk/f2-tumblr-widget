@@ -8,13 +8,13 @@
  * @author    Pete Favelle <pete@fsquared.co.uk>
  * @license   GPL-2.0+
  * @link      http://www.fsquared.co.uk
- * @copyright 2014-2021 fsquared
+ * @copyright 2014-2022 fsquared
  *
  * @wordpress-plugin
  * Plugin Name:       F2 Tumblr Widget
  * Plugin URI:        http://www.fsquared.co.uk/software/f2-tumblr/
  * Description:       Widget to display recent posts from a tumblr blog
- * Version:           0.2.15
+ * Version:           0.2.16
  * Author:            fsquared limited
  * Author URI:        http://www.fsquared.co.uk
  * Text Domain:       f2-tumblr-widget
@@ -531,4 +531,4 @@ class F2_Tumblr_Widget extends WP_Widget {
 
 } // end class
 
-add_action( 'widgets_init', create_function( '', 'register_widget("F2_Tumblr_Widget");' ) );
+add_action( 'widgets_init', function() { register_widget("F2_Tumblr_Widget"); } );

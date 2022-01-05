@@ -3,8 +3,8 @@
 Contributors: fsquared
 Tags: widget, tumblr, feed
 Requires at least: 3.3
-Tested up to: 5.7.1
-Stable tag: 0.2.15
+Tested up to: 5.8.2
+Stable tag: 0.2.16
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -73,6 +73,9 @@ If you're experiencing an empty widget, please post on the widget support page, 
 1. Widget configuration
 
 == Changelog ==
+
+= 0.2.16 =
+* Removed deprecated 'create_function' call, which can cause failures for later PHP versions.
 
 = 0.2.15 =
 * Fixed to accomodate changes in the Tumblr data (they have changed the case in the post type field, for some reason!)
